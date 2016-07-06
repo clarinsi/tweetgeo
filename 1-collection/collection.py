@@ -8,108 +8,66 @@ from datetime import datetime
 from httplib import IncompleteRead
 import sys
 from time import sleep
-
-def load_emojis():
-  import re
-  emoji_re=re.compile(r"<td class='chars'>(.+?)</td>")
-  emojis=emoji_re.findall(open('full-emoji-list.html').read().decode('utf8'))
-  return emojis
-
-def contains_emojis(tweet):
-  for index in range(len(tweet)):
-    if index+1<len(tweet):
-      if tweet[index:index+1] in emojiset:
-        return True
-    if tweet[index] in emojiset:
-      return True
-  return False
-
-current=datetime.now().strftime('%Y-%m-%d')
-try:
-  statuses=pickle.load(open('statuses_'+current))
-  print 'old statuses',len(statuses)
-except:
-  statuses=[]
-"""
-try:
-  statuses_all=pickle.load(open('statuses_all_'+current))
-  print 'old all statuses',len(statuses_all)
-except:
-  statuses_all=[]
-"""
+import sqlite3
+import config
+import os
 
 class StdOutListener(StreamListener):
 
-  def __init__(self, api=None):
+  def __init__(self,cursor,connection,log):
     super(StdOutListener, self).__init__()
     self.e420=60
+    self.cursor=cursor
+    self.connection=connection
+    self.old_entries=cursor.execute('SELECT COUNT(*) FROM tweets').fetchone()[0]
+    self.new_entries=0
+    self.log=log
 
   def on_status(self, status):
     self.e420=60
     added=False
-    global statuses
-    """
-    global statuses_all
-    """
-    global current
     if status.coordinates!=None:
-      if contains_emojis(status.text):
-        #print status.coordinates
-        #print status.place
-        stat['has']+=1
-        statuses.append(status)
-        added=True
-      else:
-        stat['not']+=1
-      """
-      statuses_all.append(status)
-      """
-    if sum(stat.values())%500==0:
-      print datetime.now().isoformat(),stat.items(),len(statuses)#,len(statuses_all)
-    if len(statuses)%5000==0:
-      if added:
-        date=datetime.now().strftime('%Y-%m-%d')
-        pickle.dump(statuses,open('statuses_'+current,'w'),1)
-        """
-        pickle.dump(statuses_all,open('statuses_all_'+current,'w'),1)
-        """
-        print datetime.now().isoformat(),'writing down',len(statuses)#,len(statuses_all)
-        if date!=current:
-          statuses=[]
-          #statuses_all=[]
-          current=date
-        added=False
-    sys.stdout.flush()
-    #print status.text,status.coordinates,dir(status)
+      self.cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?)',(status.id_str,status.user.screen_name,status.lang,buffer(pickle.dumps(status,2)),0))
+      self.connection.commit()
+      self.new_entries+=1
+      self.log.write(datetime.now().isoformat()+' New entries: '+str(self.new_entries)+' All entries: '+str(self.new_entries+self.old_entries)+'\n')
+    #if sum(stat.values())%500==0:
+    #  print datetime.now().isoformat(),stat.items(),len(statuses)#,len(statuses_all)
+    log.flush()
  
   def on_error(self, status):
     if status==420:
-      print datetime.now().isoformat(),'ERROR',status,'sleeping',self.e420
+      self.log.write(datetime.now().isoformat()+' ERROR 420, sleeping '+str(self.e420)+'\n')
       sleep(self.e420)
       self.e420*=2
     else:
-      print datetime.now().isoformat(),'ERROR',status,'sleeping 5'
+      self.log.write(datetime.now().isoformat()+' ERROR '+str(status)+', sleeping 5\n')
       sleep(5)
-    sys.stdout.flush()
+    self.log.flush()
 
 if __name__=='__main__':
-  CONSUMER_KEY='sZvIU3JWlneMxR2FRCnmSr1uP'
-  CONSUMER_SECRET='VteqZChXKuDo7h8RjzQQp7zTLJzH5fX5PZjVOwwXILilS8c9wg'
-  ACCESS_TOKEN='194186221-ssZQZcOKWPuXu9bqHRh5JK3IdfxEwXfHKle5r2kw'
-  ACCESS_TOKEN_SECRET='xtehbyYyf6wsQBtrgX1qKqhTg3FsQH9PyPBEdcr86drkt'
-  emojis=load_emojis()
-  emojiset=set(emojis)
-  stat={'has':0,'not':0}
-  l=StdOutListener()
-  auth=OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
-  auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
+  import config
+  #log=open('collection.log','a')
+  log=sys.stdout
+  db_path=config.PROJECT+'.db'
+  existing_db=os.path.isfile(db_path)
+  conn=sqlite3.connect(config.PROJECT+'.db')
+  c=conn.cursor()
+  if not existing_db:
+    c.execute('CREATE TABLE tweets (tid text, user text, tweet blob, filter integer)')
+    conn.commit()
+    log.write(datetime.now().isoformat()+' New database, table created.\n')
+  else:
+    log.write(datetime.now().isoformat()+' Old database.\n')
+  l=StdOutListener(c,conn,log)
+  log.flush()
+  auth=OAuthHandler(config.CONSUMER_KEY,config.CONSUMER_SECRET)
+  auth.set_access_token(config.ACCESS_TOKEN,config.ACCESS_TOKEN_SECRET)
   while True:
     try:
       stream=Stream(auth,l)
-      stream.filter(locations=[-180,-90,180,90])
+      stream.filter(locations=[config.MINLON,config.MINLAT,config.MAXLON,config.MAXLAT])
     except:
-      print sys.exc_info()
-      print datetime.now().isoformat(),'sleeping 0 and restarting'
-      #sleep(5)
+      log.write(str(sys.exc_info())+'\n')
+      log.write(datetime.now().isoformat()+' sleeping 0 and restarting\n')
       continue
-  #stream.filter(track=emojis[:100])
