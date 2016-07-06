@@ -31,9 +31,7 @@ class StdOutListener(StreamListener):
       self.connection.commit()
       self.new_entries+=1
       self.log.write(datetime.now().isoformat()+' New entries: '+str(self.new_entries)+' All entries: '+str(self.new_entries+self.old_entries)+'\n')
-    #if sum(stat.values())%500==0:
-    #  print datetime.now().isoformat(),stat.items(),len(statuses)#,len(statuses_all)
-    log.flush()
+    self.log.flush()
  
   def on_error(self, status):
     if status==420:
@@ -47,8 +45,7 @@ class StdOutListener(StreamListener):
 
 if __name__=='__main__':
   import config
-  #log=open('collection.log','a')
-  log=sys.stdout
+  log=open('collection.log','a')
   db_path=config.PROJECT+'.db'
   existing_db=os.path.isfile(db_path)
   conn=sqlite3.connect(config.PROJECT+'.db')
