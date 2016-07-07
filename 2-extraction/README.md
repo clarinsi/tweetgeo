@@ -4,7 +4,7 @@ Requirements: python2.7*, langid if user-level language identification is run
 
 ## Filtering
 
-For filtering before starting the analysis for now there is only the ```language_id.py``` script available which runs the lang_id language identifier on a concatenation of all texts of a user. All users satisfying the set language criterion are added to the ```users.pickle``` file and only those users are considered when extracting variables.
+For filtering before starting the analysis for now there is only the ```filter_by_user.py``` script available which runs the lang_id language identifier on a concatenation of all texts of a user. All users satisfying the set language criterion are added to the ```users.pickle``` file and only those users are considered when extracting variables.
 
 ## Extraction
 
