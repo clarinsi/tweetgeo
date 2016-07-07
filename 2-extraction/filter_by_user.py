@@ -3,9 +3,6 @@ import config
 import cPickle as pickle
 import csv
 
-#def filter_by_langs(langs):
-#  c.execute('UPDATE tweets SET filter=1 WHERE lang NOT IN (%s)' % ','.join('?'*len(langs)),langs)
-
 def user_langid(langs):
   try:
     users=pickle.load(open('users.pickle'))
@@ -26,7 +23,4 @@ def user_langid(langs):
 if __name__=='__main__':
   conn=sqlite3.connect(config.DB)
   c=conn.cursor()
-  #c.execute('UPDATE tweets SET filter=0')
-  #filter_by_langs(['pt','es','en'])
   user_langid(['hr','sr','bs'])
-  #conn.commit()
