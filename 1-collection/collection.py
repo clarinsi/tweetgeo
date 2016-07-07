@@ -27,7 +27,7 @@ class StdOutListener(StreamListener):
     self.e420=60
     added=False
     if status.coordinates!=None:
-      self.cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?)',(status.id_str,status.user.screen_name,status.lang,buffer(pickle.dumps(status,2)),0))
+      self.cursor.execute('INSERT OR IGNORE INTO tweets VALUES(?,?,?,?)',(status.id_str,status.user.screen_name,status.lang,buffer(pickle.dumps(status,2))))
       self.connection.commit()
       self.new_entries+=1
       self.log.write(datetime.now().isoformat()+' New entries: '+str(self.new_entries)+' All entries: '+str(self.new_entries+self.old_entries)+'\n')
@@ -45,13 +45,13 @@ class StdOutListener(StreamListener):
 
 if __name__=='__main__':
   import config
-  log=open('collection.log','a')
+  log=open(config.PROJECT+'.log','a')
   db_path=config.PROJECT+'.db'
   existing_db=os.path.isfile(db_path)
   conn=sqlite3.connect(config.PROJECT+'.db')
   c=conn.cursor()
   if not existing_db:
-    c.execute('CREATE TABLE tweets (tid text, user text, tweet blob, filter integer)')
+    c.execute('CREATE TABLE tweets (tid text primary key, user text, lang text, tweet blob)')
     conn.commit()
     log.write(datetime.now().isoformat()+' New database, table created.\n')
   else:
