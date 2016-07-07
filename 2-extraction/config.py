@@ -1,6 +1,9 @@
 #-*-coding:utf8-*-
 from extraction import *
 
+# languages used by user_langid in filter_by_user.py
+LANG=['hr','sr','bs']
+
 #DB='../1-collection/IberiaDSL.db'
 DB='/home/nikola/papers/2016_yutter/yutter.db'
 
