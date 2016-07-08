@@ -26,12 +26,12 @@ def langf(status):
   return status.lang
 
 def regex_choice(text,regex_dict):
-  found=[]
+  found=set()
   for k in regex_dict:
     if regex_dict[k].search(text)!=None:
-      found.append(k)
+      found.add(k)
   if len(found)==1:
-    return found[0]
+    return list(found)[0]
   else:
     return 'NA'
 
@@ -65,7 +65,7 @@ if __name__=='__main__':
   conn=sqlite3.connect(config.DB)
   c=conn.cursor()
   c.execute('SELECT user,tweet FROM tweets')
-  out=open(config.TSV,'w')#csv.writer(open(config.TSV,'w'), delimiter='\t', quotechar='"')
+  out=open(config.TSV,'w')
   counter=0
   for user,status in c.fetchall():
     counter+=1
