@@ -67,13 +67,13 @@ mapTweets<-function(df,attrNr){
   m
 }
 
-dominantLevel<-function(df,attrNr,norm=F,filtQuart=1,h=2){
+dominantLevel<-function(df,attrNr,weighted=T,filtQuart=1,h=2){
   df<-df[,c(latidx,lonidx,attrNr)]
   names(df)<-c("y","x","attr")
   
   df<-df[!is.na(df$attr),]
   
-  if(norm){
+  if(weighted){
   df.props<-prop.table(table(df$attr))
   }
 
@@ -88,7 +88,7 @@ dominantLevel<-function(df,attrNr,norm=F,filtQuart=1,h=2){
     #print(attributes(df.sub.dens@data$kde))
     #print(class(df.sub.dens@data$kde*props[i]))
     df.dens.feature@data[,i]<-df.sub.dens@data$kde
-    if(norm){df.dens.feature@data[,i]<-df.dens.feature@data[,i]*1000*df.props[i]}
+    if(weighted){df.dens.feature@data[,i]<-df.dens.feature@data[,i]*1000*df.props[i]}
   }
   
   maxLevel<-colnames(df.dens.feature@data)[apply(df.dens.feature@data,1,which.max)]
@@ -109,7 +109,7 @@ dominantLevel<-function(df,attrNr,norm=F,filtQuart=1,h=2){
     addTiles() %>%
     
     #hexagons
-    addRasterImage(df.raster , colors= pal, opacity = 0.3, group="Dominance") %>%
+    addRasterImage(df.raster , colors= pal, project=T, opacity = 0.3, group="Dominance") %>%
 
     #legend for percipitation meassures
     addLegend(position = 'topright',colors = pal(levels(factor(df.raster@data@values))), labels = levels(df.raster@data@attributes[[1]]$levels))%>%  

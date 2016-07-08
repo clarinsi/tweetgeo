@@ -42,8 +42,7 @@ summary(tw[,cols])
 source("analysis.R")
 
 #define the variable index of interest
-
-varidx<-7
+varidx<-8
 
 #calculate the spatial signal for each level of each linguistic variable
 print(spatialSignal(tw,varidx))
@@ -52,7 +51,7 @@ print(spatialSignal(tw,varidx))
 mapTweets(tw,varidx)
 
 #visualise the dominant levels on a map without taking into account the level distributions
-dominantLevel(tw,varidx)
+dominantLevel(tw,varidx,filtQuart=1.5,h=2)
 
 #visualise the dominant levels on a map taking into account the level distributions
-dominantLevel(tw,varidx,norm=T,h=2,filtQuart = 2)
+dominantLevel(tw,varidx,weighted=F)
