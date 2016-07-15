@@ -42,16 +42,16 @@ summary(tw[,cols])
 source("analysis.R")
 
 #define the variable index of interest
-varidx<-8
+varidx<-11
 
 #calculate the spatial signal for each level of each linguistic variable
-print(spatialSignal(tw,varidx))
+print(spatialSignal(tw,latidx,lonidx,varidx))
 
 #visualise the variable values on a map with texts of the (trimmed) original tweets available as metadata
-mapTweets(tw,varidx)
-
-#visualise the dominant levels on a map without taking into account the level distributions
-dominantLevel(tw,varidx,filtQuart=1.5,h=2)
+mapTweets(tw,latidx,lonidx,varidx,textidx)
 
 #visualise the dominant levels on a map taking into account the level distributions
-dominantLevel(tw,varidx,weighted=F)
+dominantLevel(tw,latidx,lonidx,varidx)
+
+#visualise the dominant levels on a map without taking into account the level distributions
+dominantLevel(tw,latidx,lonidx,varidx,normalised=T)
