@@ -84,8 +84,8 @@ if __name__=='__main__':
     if status.geo==None:
       continue
     entry=[]
-    for argument in ('id_str','user.screen_name','geo[\'coordinates\'][1]','geo[\'coordinates\'][0]','text'):
-      entry.append(normalise_space(metadata(status,argument)))
+    for argument,function in (('id_str',None),('user.screen_name',None),('geo[\'coordinates\'][1]',lambda x:str(x)),('geo[\'coordinates\'][0]',lambda x:str(x)),('text',None)):
+      entry.append(normalise_space(metadata(status,argument,function)))
     for (argument,function) in config.EXTRACTION_STATUS:
       entry.append(normalise_space(metadata(status,argument,function)))
     for function,args in config.EXTRACTION_TEXT:
