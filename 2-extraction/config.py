@@ -32,6 +32,11 @@ token_re=re.compile(r'#\w+|@\w|https?://[\w/_.-]+|\w+',re.UNICODE)
 def tokenize(text):
   return token_re.findall(text)
 
-EXTRACTION_STATUS=[langf,]
-EXTRACTION_TEXT=[(lexicon_choice,(RESOURCES['stosta'],)),(regex_choice,({'dali':re.compile(r'\b(da li)\b',re.UNICODE),'jeli':re.compile(r'\b(je li)\b',re.UNICODE)},))]
-EXTRACTION_NORMALISED=[(lexicon_choice,(RESOURCES['yat'],)),(lexicon_choice,(RESOURCES['prijateljdrug'],)),(lexicon_choice,(RESOURCES['rdrop'],)),(lexicon_choice,(RESOURCES['breba'],)),(lexicon_choice,(RESOURCES['months'],)),(lexicon_choice,(RESOURCES['mnogo'],)),(regex_choice,({'noise':re.compile(r'^i\'m at '),'noise':re.compile(ur'по курсу')},))]
+# pairs of arguments from Status objects to be extracted and functions to be applied, None for lambda x:x
+EXTRACTION_STATUS=[('lang',None),]
+# pairs of function names and arguments / resources
+EXTRACTION_TEXT=[]
+# same as previous, but to be run on lowercased text
+EXTRACTION_LOWER=[(lexicon_choice,(RESOURCES['stosta'],)),(regex_choice,((re.compile(r'\b(da li)\b',re.UNICODE),'dali'),(re.compile(r'\b(je li)\b',re.UNICODE),'jeli'))]
+# same as before, but to be run on normalised text
+EXTRACTION_NORMALISED=[(lexicon_choice,(RESOURCES['yat'],)),(lexicon_choice,(RESOURCES['prijateljdrug'],)),(lexicon_choice,(RESOURCES['rdrop'],)),(lexicon_choice,(RESOURCES['breba'],)),(lexicon_choice,(RESOURCES['months'],)),(lexicon_choice,(RESOURCES['mnogo'],)),(regex_choice,((re.compile(r'^i\'m at '),'noise'),(re.compile(ur'по курсу'),'noise'))]
