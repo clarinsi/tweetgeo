@@ -6,12 +6,12 @@ For defining the filtering and extraction processes, you should edit the ```conf
 
 ## Filtering
 
-For filtering before starting the analysis for now there is only the ```filter_by_user.py``` script available which
-- filters by the ```config.MIN_NO_TWEETS``` criterion, discarding all users tweets that have less tweets in the collection than the criterion defines,
-- filters by the user's languages defined in ```config.LANGS``` by running the langid.py language identifier on a concatenation of all texts of a user, with mentions, hastags and URLs removed,
-- filters by the criterion whether the user tweeted mostly from the list of countries defined in ```config.COUNTRIES```.
+For filtering before starting the analysis for now there is only the ```filter_by_user.py``` script available which filters by
+- the ```config.MIN_NO_TWEETS``` criterion, discarding all users tweets that have less tweets in the collection than the criterion defines,
+- the user's languages defined in ```config.LANGS``` by running the langid.py language identifier on a concatenation of all texts of a user, with mentions, hastags and URLs removed,
+- the criterion whether the user tweeted mostly from the list of countries defined in ```config.COUNTRIES```.
 
-All users satisfying ALL the set criteria are added to the ```users.pickle``` file and only those users are considered when extracting variables.
+Users satisfying ALL the set criteria are added to the ```users.pickle``` file and only those users are considered when extracting variables.
 
 ## Extraction
 
