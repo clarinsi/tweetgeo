@@ -1,4 +1,4 @@
-# The collection module of GeoTweet
+# The collection module of TweetGeo
 
 Requirements: python2.7* and tweepy3.5.0
 

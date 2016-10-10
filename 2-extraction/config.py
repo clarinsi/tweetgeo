@@ -1,8 +1,11 @@
 #-*-coding:utf8-*-
 from extraction import *
 
-# languages used by user_langid in filter_by_user.py
-LANG=['hr','sr','bs']
+# minimum number of tweets for the user to be taken under consideration
+MIN_NO_TWEETS=5
+# languages and countries used by user_langid in filter_by_user.py
+LANGS=['hr','sr','bs']
+COUNTRIES=['HR','RS','BA']
 
 DB='../1-collection/hbs-twitter.db'
 
@@ -39,5 +42,4 @@ EXTRACTION_TEXT=[]
 # same as previous, but to be run on lowercased text
 EXTRACTION_LOWER=[(lexicon_choice,(RESOURCES['stosta'],)),(regex_choice,([(re.compile(r'\b(da li)\b',re.UNICODE),'dali'),(re.compile(r'\b(je li)\b',re.UNICODE),'jeli')],))]
 # same as before, but to be run on normalised text
-EXTRACTION_NORMALISED=[]
 EXTRACTION_NORMALISED=[(lexicon_choice,(RESOURCES['yat'],)),(lexicon_choice,(RESOURCES['prijateljdrug'],)),(lexicon_choice,(RESOURCES['rdrop'],)),(lexicon_choice,(RESOURCES['breba'],)),(lexicon_choice,(RESOURCES['months'],)),(lexicon_choice,(RESOURCES['mnogo'],)),(regex_choice,([(re.compile(r'^i\'m at '),'noise'),(re.compile(ur'по курсу'),'noise')],))]
