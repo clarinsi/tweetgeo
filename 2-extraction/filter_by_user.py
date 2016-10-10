@@ -66,7 +66,6 @@ def user_country(candidate):
   from langid import classify
   c.execute('SELECT user,tweet FROM tweets')
   count=0
-  #user_coordinates=[]
   user_countries={}
   for user,status in c.fetchall():
     count+=1
@@ -78,21 +77,13 @@ def user_country(candidate):
     if status.place==None:
       continue
     country=status.place.country_code
-    #lon,lat=status.geo['coordinates']
     if user not in user_countries:
       user_countries[user]=[0,0]
     user_countries[user][1]+=1
     if country in config.COUNTRIES:
       user_countries[user][0]+=1
-    #user_coordinates.append((user,(lon,lat)))
   print 'Processed:',count
-  #countries=[e['cc'] for e in rg.search([e[1] for e in user_coordinates])]
-  #for (user, lonlat),country in zip(user_coordinates,countries):
-  #  user_countries[user][1]+=1
-  #  if country in config.COUNTRIES:
-  #    user_countries[user][0]+=1
   for user in user_countries:
-    #print user,user_countries[user]
     if user_countries[user][0]>=user_countries[user][1]/2.:
       users.add(user)
   conn.close()
