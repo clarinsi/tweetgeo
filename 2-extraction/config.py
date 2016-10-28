@@ -42,4 +42,4 @@ EXTRACTION_TEXT=[]
 # same as previous, but to be run on lowercased text
 EXTRACTION_LOWER=[(lexicon_choice,(RESOURCES['stosta'],)),(regex_choice,([(re.compile(r'\b(da li)\b',re.UNICODE),'dali'),(re.compile(r'\b(je li)\b',re.UNICODE),'jeli')],))]
 # same as before, but to be run on normalised text
-EXTRACTION_NORMALISED=[(lexicon_choice,(RESOURCES['yat'],)),(lexicon_choice,(RESOURCES['prijateljdrug'],)),(lexicon_choice,(RESOURCES['rdrop'],)),(lexicon_choice,(RESOURCES['breba'],)),(lexicon_choice,(RESOURCES['months'],)),(lexicon_choice,(RESOURCES['mnogo'],)),(regex_choice,([(re.compile(r'^i\'m at '),'noise'),(re.compile(ur'по курсу'),'noise')],))]
+EXTRACTION_NORMALISED=[(lexicon_choice,(RESOURCES['yat'],)),(lexicon_choice,(RESOURCES['iraisaova'],)),(lexicon_choice,(RESOURCES['prijateljdrug'],)),(lexicon_choice,(RESOURCES['rdrop'],)),(lexicon_choice,(RESOURCES['breba'],)),(lexicon_choice,(RESOURCES['months'],)),(lexicon_choice,(RESOURCES['mnogo'],)),(regex_choice,([(re.compile(r'^i\'m at '),'noise'),(re.compile(ur'по курсу'),'noise')],))]
